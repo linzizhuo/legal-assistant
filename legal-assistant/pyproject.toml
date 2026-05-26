@@ -4,6 +4,8 @@ version = "0.1.0"
 description = "法律智能助手"
 requires-python = ">=3.12"
 dependencies = [
+    "numpy>=2.4.6",
     "pydantic>=2.13.4",
     "python-dotenv>=1.2.2",
+    "sentence-transformers>=5.5.1",
 ]

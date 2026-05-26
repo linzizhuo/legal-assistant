@@ -15,7 +15,7 @@ import json
 from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DATA_DIR = PROJECT_ROOT / "legal-assistant" / "data" / "raw"
+DATA_DIR = PROJECT_ROOT / "data" / "raw"
 
 REPO_OWNER = "taburise"
 REPO_NAME = "Chinese-Laws-folk"
