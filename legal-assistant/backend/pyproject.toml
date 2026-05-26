@@ -1,9 +1,0 @@
-[project]
-name = "legal-assistant-backend"
-version = "0.1.0"
-description = "Legal Assistant 后端服务"
-requires-python = ">=3.12"
-dependencies = [
-    "fastapi>=0.115.0",
-    "uvicorn[standard]>=0.34.0",
-]
