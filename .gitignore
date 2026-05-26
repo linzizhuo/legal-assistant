@@ -11,6 +11,10 @@ uv.lock
 node_modules/
 dist/
 
+# 数据文件（法律条文、向量索引）
+data/raw/
+data/index/
+
 # IDE
 .vscode/
 .idea/
