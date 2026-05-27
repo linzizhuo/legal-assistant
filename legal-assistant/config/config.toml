@@ -1,0 +1,13 @@
+[embedder]
+type = "sentence_transformer"
+model_name = "shibing624/text2vec-base-chinese"
+
+[embedder.registry]
+sentence_transformer = "rag.embedder.SentenceTransformerEmbedder"
+
+[vector_store]
+type = "faiss"
+dim = 768
+
+[vector_store.registry]
+faiss = "rag.vector_store.FAISSVectorStore"

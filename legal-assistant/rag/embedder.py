@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 import numpy as np
-
+from core.registry import Registry
 
 class BaseEmbedder(ABC):
     """嵌入模型抽象基类"""
@@ -46,3 +46,6 @@ class SentenceTransformerEmbedder(BaseEmbedder):
     def get_dimension(self) -> int:
         self._load_model()
         return self._model.get_sentence_embedding_dimension()
+
+# —— 注册器实例跟着抽象类走 ——
+embedder_registry = Registry[BaseEmbedder]()

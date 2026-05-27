@@ -3,7 +3,7 @@ import json
 import numpy as np
 import faiss
 from pathlib import Path
-
+from core.registry import Registry
 
 class BaseVectorStore(ABC):
     """向量数据库抽象基类"""
@@ -78,3 +78,6 @@ class FAISSVectorStore(BaseVectorStore):
 
     def get_total_count(self) -> int:
         return self.index.ntotal
+
+
+vector_store_registry = Registry[BaseVectorStore]()
