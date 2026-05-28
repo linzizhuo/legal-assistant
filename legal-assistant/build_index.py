@@ -7,9 +7,13 @@ from rag.vector_store import vector_store_registry
 from rag.pipeline import build_index as _build
 # 读取配置。
 load_dotenv()
-config_path = Path(__file__).parent / "config" / "config.toml"
+ROOT = Path(__file__).parent
+# 保证绝对路径。
+config_path = ROOT / "config" / "config.toml"
+index_path = ROOT / "data" / "index"
+
 def run():
-    with open(config_path, "rb") as f: 
+    with open(config_path, "rb") as f:
         config = tomllib.load(f)
 
     embedder_registry.register_from_config(config["embedder"]["registry"])
@@ -25,7 +29,7 @@ def run():
     )
 
     total = _build(embedder, store)
-    store.save("data/index")
+    store.save(index_path)
     print(f"索引构建完成，共 {total} 条")
 
 if __name__ == "__main__":
