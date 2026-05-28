@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from pathlib import Path
 from rag.reader import scan_files, read_lines
-from rag.parser import parse_lines
+from rag.parser import extract_articles
 
 
 def main():
@@ -21,7 +21,7 @@ def main():
 
     for file_path in files:
         lines = read_lines(file_path)
-        articles = parse_lines(lines, source_file=str(file_path))
+        articles = extract_articles(lines, source_file=str(file_path))
 
         total_articles += len(articles)
 

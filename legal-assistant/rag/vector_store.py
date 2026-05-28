@@ -42,7 +42,7 @@ class FAISSVectorStore(BaseVectorStore):
         self.metadata.extend(metadatas)
 
     def search(self, query_vector: np.ndarray, k: int = 10) -> list[dict]:
-        """搜索 top-k 相似向量，返回 [{"score": ..., "metadata": ...}, ...]"""
+        """语义搜索：查找 top-k 最相似的法律条文"""
         scores, indices = self.index.search(query_vector, k)
         results = []
         for score, idx in zip(scores[0], indices[0]):

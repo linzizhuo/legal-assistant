@@ -4,7 +4,7 @@ from pathlib import Path
 from rag.embedder import embedder_registry
 from dotenv import load_dotenv
 from rag.vector_store import vector_store_registry
-from rag.pipeline import build_index as _build
+from rag.pipeline import index_all_laws as _index_all_laws
 # 读取配置。
 load_dotenv()
 ROOT = Path(__file__).parent
@@ -12,7 +12,7 @@ ROOT = Path(__file__).parent
 config_path = ROOT / "config" / "config.toml"
 index_path = ROOT / "data" / "index"
 
-def run():
+def build_law_index():
     with open(config_path, "rb") as f:
         config = tomllib.load(f)
 
@@ -28,9 +28,9 @@ def run():
         dim=config["vector_store"]["dim"],
     )
 
-    total = _build(embedder, store)
+    total = _index_all_laws(embedder, store)
     store.save(index_path)
     print(f"索引构建完成，共 {total} 条")
 
 if __name__ == "__main__":
-    run()
+    build_law_index()

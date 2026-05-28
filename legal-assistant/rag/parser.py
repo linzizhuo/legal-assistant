@@ -24,7 +24,7 @@ def _extract_law_name(file_path: str) -> str | None:
     return None
 
 
-def parse_line(line: str, default_law_name: str | None = None) -> LegalArticle | None:
+def _parse_article_line(line: str, default_law_name: str | None = None) -> LegalArticle | None:
     """将一行法律条文解析为 LegalArticle，失败返回 None"""
     match = PATTERN.match(line)
     if not match:
@@ -66,13 +66,13 @@ def _merge_continuation_lines(lines: list[str]) -> list[str]:
     return merged
 
 
-def parse_lines(lines: list[str], source_file: str = "") -> list[LegalArticle]:
-    """解析多行，返回 LegalArticle 列表"""
+def extract_articles(lines: list[str], source_file: str = "") -> list[LegalArticle]:
+    """从法律文本行中提取所有法律条文"""
     lines = _merge_continuation_lines(lines)
     default_name = _extract_law_name(source_file) if source_file else None
     articles = []
     for line in lines:
-        article = parse_line(line, default_law_name=default_name)
+        article = _parse_article_line(line, default_law_name=default_name)
         if article is not None:
             articles.append(article)
     return articles
