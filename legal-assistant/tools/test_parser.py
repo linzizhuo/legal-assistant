@@ -4,7 +4,8 @@
 
 import sys
 import re
-sys.path.insert(0, ".")
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from pathlib import Path
 from rag.reader import scan_files, read_lines
@@ -16,10 +17,13 @@ def main():
     print(f"共 {len(files)} 个法律文件\n")
 
     issues = []
+    total_articles = 0
 
     for file_path in files:
         lines = read_lines(file_path)
         articles = parse_lines(lines, source_file=str(file_path))
+
+        total_articles += len(articles)
 
         # 统计
         total = len(lines)
@@ -52,6 +56,8 @@ def main():
         # 输出
         status = "✅" if not flag else "⚠️"
         print(f"{status} {file_path.name:35s} {total:>4d} 行 → {parsed:>4d} 条 ({rate:5.1f}%){flag}")
+
+    print(f"\n总计: {total_articles} 条法律条文")
 
     # 汇总问题文件
     if issues:
