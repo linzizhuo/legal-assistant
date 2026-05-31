@@ -20,3 +20,6 @@ legal-assistant/data/index/
 .idea/
 *.swp
 *.swo
+
+# Build artifacts
+*.egg-info/

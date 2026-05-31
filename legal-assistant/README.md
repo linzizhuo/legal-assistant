@@ -1,6 +1,6 @@
 # Legal Assistant
 
-法律智能助手项目 — 基于语义检索的中国法律条文搜索引擎。
+法律智能助手项目 — 基于语义检索 + LLM 问答的中国法律条文检索系统。
 
 ## 目录结构
 
@@ -15,6 +15,10 @@ legal-assistant/
 │   ├── embedder.py       # 嵌入模型（抽象 + 实现）
 │   ├── vector_store.py   # 向量存储（抽象 + 实现）
 │   └── pipeline.py       # 索引构建与检索管线
+├── agent/
+│   ├── retriever.py      # LangChain 检索器（包装现有 FAISS 检索）
+│   ├── chain.py          # 自定义 LawChain：历史重写 + 检索 + LLM 生成
+│   └── cli.py            # CLI 交互式法律问答入口
 ├── models/
 │   └── law.py            # LegalArticle Pydantic model
 ├── config/
@@ -53,6 +57,11 @@ uv run python build_index.py
 # 搜索法律条文
 uv run python main.py "遗赠扶养协议有什么效力"
 
+# 多轮法律问答（需配置 LLM API Key）
+export DEEPSEEK_API_KEY=sk-xxx
+export LLM_MODEL=deepseek-chat
+uv run python agent/cli.py
+
 # 测试解析
 uv run python tools/test_parser.py
 
@@ -67,4 +76,20 @@ uv run python tools/download_laws.py
 - **惰性加载**：嵌入模型首次使用时加载，避免无谓内存占用
 - **续行合并**：跨行法律条文自动合并
 - **格式兼容**：同时支持 `《法律名》第X条` 标准格式和 `第X条` 宪法格式
+
+## 对话问答
+
+`agent/` 模块实现了基于 LangChain 组件 + 自定义流程的多轮法律问答：
+
+| 组件 | 文件 | 职责 |
+|------|------|------|
+| `LawRetriever` | `retriever.py` | 将现有 FAISS 检索包装为 LangChain `BaseRetriever` |
+| `LawChain` | `chain.py` | 自定义主循环：历史重写 → 检索 → 拼 Prompt → LLM 生成 → 记忆 |
+| `CLI` | `cli.py` | 交互式入口，加载索引和模型，一问一答 |
+
+**流程**：用户提问 → 结合历史重写问题 → FAISS 检索 top-k 法条 → 组装 Prompt → ChatDeepSeek 生成回答 → 存入聊天历史
+
+**环境变量**：
+- `DEEPSEEK_API_KEY` — DeepSeek API Key
+- `LLM_MODEL` — 模型名（默认 `deepseek-chat`）
  

@@ -5,8 +5,19 @@ description = "法律智能助手"
 requires-python = ">=3.12"
 dependencies = [
     "faiss-cpu>=1.14.2",
+    "langchain>=0.3.0",
+    "langchain-deepseek-v4>=0.1.0",
+    "langchain-openai>=0.3.0",
     "numpy>=2.4.6",
     "pydantic>=2.13.4",
     "python-dotenv>=1.2.2",
     "sentence-transformers>=5.5.1",
 ]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["rag*", "agent*", "core*"]

@@ -1,10 +1,10 @@
 # Legal Assistant
 
-法律智能助手 — 基于 RAG 的中文法律条文检索系统。
+法律智能助手 — 基于 RAG 的中文法律条文检索与问答系统。
 
 ## 项目简介
 
-从公开数据源获取中国现行法律条文，经解析清洗后构建向量索引，实现法律条文的语义检索。
+从公开数据源获取中国现行法律条文，经解析清洗后构建向量索引，实现法律条文的语义检索。上层基于 LangChain 搭建对话框架，支持通过 LLM 进行多轮法律问答。
 
 ## 技术栈
 
@@ -15,6 +15,7 @@
 | 嵌入模型 | `sentence-transformers` (`shibing624/text2vec-base-chinese`) | 本地运行，768 维，无需 API Key |
 | 向量检索 | FAISS (`IndexFlatIP`) | 内积（余弦）相似度搜索，暴力全量比对 |
 | 实现管理 | `Registry[T]` 注册器 + TOML 配置 | 新增实现只需改配置文件 |
+| 对话框架 | LangChain 组件 + 自定义 LawChain | 可控的主流程，集成历史重写、检索增强、LLM 生成 |
 
 ## 项目状态
 
@@ -23,6 +24,7 @@
 - ✅ **嵌入模型** — 本地中文模型封装，支持通过注册器扩展
 - ✅ **向量库** — FAISS 索引 + 元数据存储，支持持久化
 - ✅ **检索管线** — build_index（离线构建）/ search（在线检索）分离
+- ✅ **对话问答** — 基于 LangChain 组件 + ChatDeepSeek 的多轮法律问答，支持聊天历史和问题重写
 
 ## 目录结构
 
@@ -36,6 +38,10 @@ legal-assistant/
 │   ├── embedder.py       # 嵌入模型（抽象 + 实现）
 │   ├── vector_store.py   # 向量存储（抽象 + 实现）
 │   └── pipeline.py       # 索引构建与检索管线
+├── agent/
+│   ├── retriever.py      # LangChain 检索器（包装现有检索）
+│   ├── chain.py          # 自定义 LawChain：重写 + 检索 + 生成 + 记忆
+│   └── cli.py            # CLI 交互式法律问答入口
 ├── models/
 │   └── law.py            # 法律条文数据结构
 ├── config/
@@ -69,9 +75,16 @@ uv run python build_index.py
 # 搜索法律条文
 uv run python main.py "遗赠扶养协议有什么效力"
 
+# 多轮法律问答（需配置 LLM API Key）
+export DEEPSEEK_API_KEY=sk-xxx
+export LLM_MODEL=deepseek-chat
+uv run python agent/cli.py
+
 # 测试解析
 uv run python tools/test_parser.py
 ```
+
+> **注意**：`agent/cli.py` 为交互式对话，输入问题后回车等待回答，输入 `exit` 退出。
 
 ## 已知问题
 
